@@ -7,8 +7,8 @@ const verifyToken = (req, res, next) => {
       return res.status(403).json({ message: "Token is required to authenticate" })
     }
     try {
-      const decoded = jwt.verify(token, 'secret')
-      req.query.id = decoded
+/*       const decoded = jwt.verify(token, 'secret')
+      req.query.id = decoded.id */
       next()
     } catch (err) {
       return res.status(401).json({ message: "Invalid token" })

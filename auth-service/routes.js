@@ -1,9 +1,9 @@
 const express = require('express')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const User = require('./models')
 const router = express.Router()
-const verifyToken = require('../middlewarre/verifyToken')
+const verifyToken = require('../middleware/verifyToken')
 
 router.post('/register', async (req, res) => {
     const { email, name, _id , password } = req.body
@@ -21,18 +21,21 @@ router.post('/register', async (req, res) => {
   })
 
 router.post('/login', async (req, res) => {
-    const { email, password } = req.body
-    const user = await User.findOne({ email })
-    if (!user){
-        return res.status(400).json({ message: "User not found" })
-        }
-    const check = await bcrypt.compare(password, user.password)
-    if (!check){
-         return res.status(400).json({ message: "Invalid Credentials" })
-        }
-    const token = jwt.sign({ id: user._id }, 'secret')
-    res.json({ token })
+  const { email, password } = req.body
+  const user = await User.findOne({ email })
+  if (!user){
+      return res.status(400).json({ message: "User not found" })
+  }
+  const check = await bcrypt.compare(password, user.password)
+  if (!check){
+        return res.status(400).json({ message: "Invalid Credentials" })
+  }
+  const token = jwt.sign({ id: user._id }, 'secret')
+
+ // res.setHeader('Authorization', `Bearer ${token}`) 
+  res.json({ token })   
 })
+
 
 router.get('/profile', verifyToken, async (req, res) => {
     const userId = req.query.id
@@ -47,3 +50,4 @@ router.get('/profile', verifyToken, async (req, res) => {
     }
   })
   
+  module.exports = router

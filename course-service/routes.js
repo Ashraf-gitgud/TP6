@@ -14,9 +14,9 @@ router.get('/all', async (req, res) => {
 })
 
 router.post('/add', async (req, res) => {
-    const { titre, professeur, description, prix } = req.body
+    const {_id, titre, professeur_id, description, prix } = req.body
     try {
-        const newCourse = new Course({ titre, professeur, description, prix })
+        const newCourse = new Course({_id, titre, professeur_id, description, prix })
         await newCourse.save()
         res.status(201).json(newCourse)
     } catch (err) {
@@ -26,9 +26,9 @@ router.post('/add', async (req, res) => {
 
 router.put('/update/:id', async (req, res) => {
     const { id } = req.params
-    const { titre, professeur, description, prix } = req.body
+    const { titre, professeur_id, description, prix } = req.body
     try {
-        const updatedCourse = await Course.findByIdAndUpdate(id, { titre, professeur, description, prix }, { new: true })
+        const updatedCourse = await Course.findByIdAndUpdate(id, { titre, professeur_id , description, prix }, { new: true })
         res.json(updatedCourse)
     } catch (err) {
         res.status(500).json({ message: err.message })
@@ -54,3 +54,4 @@ router.get('/search', async (req, res) => {
         res.status(500).json({ message: err.message })
     }
 })
+module.exports = router
